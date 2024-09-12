@@ -2,8 +2,7 @@ const express = require("express");
 const AppError = require("./utils/appError");
 const { globalErrorMiddleware } = require("./controllers/errorControllers");
 const app = express();
-// ====== import router ======
-const router = require("./routes/userRoutes");
+const routerV1 = require("./routes");
 
 // === middlewares ===
 app.use(express.json());
@@ -12,7 +11,7 @@ app.use(express.json());
 // app.use(express.static(`${__dirname}/public`));
 
 // === all routes will define here
-app.use("/api/v1/users", router);
+app.use("/api/v1", routerV1);
 
 // ==== return when no route handler match all above ====
 app.all("*", (req, res, next) => {

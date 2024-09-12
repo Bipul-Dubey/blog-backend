@@ -7,13 +7,23 @@ const {
   protectRoutes,
   updatePassword,
 } = require("../controllers/authControllers");
-const router = express.Router();
+const {
+  deleteCurrentUser,
+  updateCurrentUser,
+  getAllUser,
+  getUser,
+} = require("../controllers/userControllers");
+const userRouter = express.Router();
 
-router.post("/signup", signup);
-router.post("/login", login);
-router.post("/forgot-password", forgotPassword);
-router.patch("/reset-password/:token", resetPassword);
-router.patch("/reset-my-password", protectRoutes, updatePassword);
-// router.patch("/current-user/:id", protectRoutes, updateCurrentUser);
+userRouter.post("/signup", signup);
+userRouter.post("/login", login);
+userRouter.post("/forgot-password", forgotPassword);
+userRouter.patch("/reset-password/:token", resetPassword);
+userRouter.patch("/reset-my-password", protectRoutes, updatePassword);
+userRouter.patch("/update-current-user", protectRoutes, updateCurrentUser);
+userRouter.delete("/delete-current-user", protectRoutes, deleteCurrentUser);
 
-module.exports = router;
+userRouter.route("/").get(protectRoutes, getAllUser);
+userRouter.route("/:id").get(protectRoutes, getUser);
+
+module.exports = userRouter;

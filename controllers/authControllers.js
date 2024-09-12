@@ -17,6 +17,19 @@ const generateToken = (id) => {
 const createSendToken = (user, statusCode, res) => {
   const token = generateToken(user._id);
 
+  const cookiesOptions = {
+    expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+    secure: false,
+    httpOnly: true,
+  };
+
+  if (process.env.NODE_ENV === "production") {
+    cookiesOptions.secure = true;
+  }
+
+  // send token via cookies
+  res.cookie("token", token, cookiesOptions);
+
   res.status(statusCode).json({
     status: "success",
     token,
@@ -25,6 +38,11 @@ const createSendToken = (user, statusCode, res) => {
     },
   });
 };
+
+const getUserIdByToken = catchAsync(async (token) => {
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  return decoded;
+});
 
 exports.signup = catchAsync(async (req, res, next) => {
   const reqBody = req.body;
