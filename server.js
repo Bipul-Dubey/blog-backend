@@ -3,7 +3,10 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 // ==== DB connection ====
-const DB = `${process.env.MONGODB_URI}/${process.env.DATABASE}`;
+const DB = `${process.env.MONGODB_URI.replace(
+  "<db_password>",
+  process.env.DB_PASSWORD
+)}/${process.env.DATABASE}`;
 mongoose
   .connect(DB, {})
   .then((con) => {
